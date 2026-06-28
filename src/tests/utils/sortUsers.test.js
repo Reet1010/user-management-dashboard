@@ -20,6 +20,20 @@ describe("sortUsers", () => {
     },
   ];
 
+  it("returns 0 and maintains order when two users have identical names", () => {
+    const identicalUsers = [
+      { name: "Alex", id: 1 },
+      { name: "Alex", id: 2 },
+    ];
+
+    const result = sortUsers(identicalUsers, { key: "name", direction: "asc" });
+
+    expect(result).toEqual([
+      { name: "Alex", id: 1 },
+      { name: "Alex", id: 2 },
+    ]);
+  });
+
   it("sorts users in ascending order", () => {
     const sorted = sortUsers(users, {
       key: "firstName",

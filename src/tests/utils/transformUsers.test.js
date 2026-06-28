@@ -42,6 +42,22 @@ describe("transformUsers", () => {
     expect(transformed[0].email).toBe("john@test.com");
   });
 
+  it("handles missing company data gracefully and defaults to an empty string", () => {
+    const usersArrayWithoutCompany = [
+      {
+        id: 1,
+        name: "John Doe",
+        email: "john@example.com",
+        // company field left intentionally absent
+      },
+    ];
+
+    const transformed = transformUsers(usersArrayWithoutCompany);
+
+    // Since it returns an array, check the first element
+    expect(transformed[0].company).toBe("");
+  });
+
   it("copies company name", () => {
     expect(transformed[0].company).toBe("Google");
   });

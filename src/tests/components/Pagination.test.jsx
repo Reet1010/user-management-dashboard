@@ -5,6 +5,12 @@ import { describe, expect, it, vi } from "vitest";
 import Pagination from "../../components/Pagination";
 
 describe("Pagination", () => {
+    it("displays Page 0 of 0 when totalPages is 0", () => {
+        render(<Pagination page={1} totalPages={0} setPage={() => { }} />);
+
+        expect(screen.getByText(/Page 0 of 0/i)).toBeInTheDocument();
+    });
+
     it("renders current page", () => {
         render(
             <Pagination

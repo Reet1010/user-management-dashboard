@@ -117,4 +117,57 @@ describe("UserTable", () => {
 
         expect(onSort).toHaveBeenCalledWith("firstName");
     });
+
+    it("renders descending sort indicator arrow when direction is desc", () => {
+        // ✅ Match the key with a real column data property like 'email'
+        const mockSortConfig = { key: "email", direction: "desc" };
+        const sampleUsers = [{ id: 1, firstName: "John", lastName: "Doe", email: "john@example.com" }];
+
+        render(
+            <UserTable
+                users={sampleUsers}
+                sortConfig={mockSortConfig}
+                onSort={() => { }}
+            />
+        );
+
+        // ✅ Use a partial text matcher string option or a flexible regex lookup
+        expect(screen.getByText(/Email/i)).toHaveTextContent("▼");
+    });
+
+    it("does not render any sorting arrows when sortConfig is empty", () => {
+        const emptySortConfig = { key: "", direction: "" };
+        const sampleUsers = [{ id: 1, firstName: "John", lastName: "Doe", email: "john@example.com" }];
+
+        render(
+            <UserTable
+                users={sampleUsers}
+                sortConfig={emptySortConfig}
+                onSort={() => { }}
+            />
+        );
+
+        // Verify that neither the up arrow nor down arrow shows up in the table headers
+        expect(screen.queryByText(/▲/)).not.toBeInTheDocument();
+        expect(screen.queryByText(/▼/)).not.toBeInTheDocument();
+    });
+
+    it("renders ascending sort indicator arrow when direction is asc", () => {
+        // ✅ This forces the ternary operator to hit the "true" branch
+        const mockSortConfig = { key: "email", direction: "asc" };
+        const sampleUsers = [{ id: 1, firstName: "John", lastName: "Doe", email: "john@example.com" }];
+
+        render(
+            <UserTable
+                users={sampleUsers}
+                sortConfig={mockSortConfig}
+                onSort={() => { }}
+            />
+        );
+
+        expect(screen.getByText(/Email/i)).toHaveTextContent("▲");
+    });
+
+
+
 });
