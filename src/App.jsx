@@ -91,12 +91,12 @@ function App() {
 
   async function handleAddUser(user) {
     try {
-      const created = await createUser(user);
+      const createdUser = await createUser(user);
 
       setUsers((prev) => [
         {
           ...user,
-          id: created.id || Date.now(),
+          id: createdUser.id,
         },
         ...prev,
       ]);
@@ -115,10 +115,17 @@ function App() {
 
   async function handleUpdateUser(user) {
     try {
-      await updateUser(user);
+      const updatedUser = await updateUser(user);
 
       setUsers((prev) =>
-        prev.map((u) => (u.id === user.id ? user : u))
+        prev.map((u) =>
+          u.id === user.id
+            ? {
+              ...u,
+              ...updatedUser,
+            }
+            : u
+        )
       );
 
       showAlert("success", "User updated.");
