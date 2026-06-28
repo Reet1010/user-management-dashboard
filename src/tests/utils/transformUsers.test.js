@@ -25,8 +25,8 @@ describe("transformUsers", () => {
       },
     },
   ];
-
-  const transformed = transformUsers(apiUsers);
+  //using same department on every run produces the same result, making the test completely deterministic
+  const transformed = transformUsers(apiUsers, () => "Engineering");
 
   it("splits first and last name", () => {
     expect(transformed[0].firstName).toBe("John");
