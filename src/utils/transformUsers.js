@@ -1,25 +1,42 @@
 import { DEPARTMENTS } from "./constants";
 
 function getRandomDepartment() {
-  const randomIndex = Math.floor(Math.random() * DEPARTMENTS.length);
-  return DEPARTMENTS[randomIndex];
+  return DEPARTMENTS[Math.floor(Math.random() * DEPARTMENTS.length)];
+}
+
+function transformUser(user, id) {
+  const nameParts = user.name.trim().split(" ");
+
+  return {
+    id,
+    firstName: nameParts[0],
+    lastName: nameParts.slice(1).join(" "),
+    email: user.email,
+    phone: user.phone,
+    website: user.website,
+    company: user.company?.name || "",
+    department: getRandomDepartment(),
+  };
 }
 
 export function transformUsers(users) {
-  return users.map((user) => {
-    const nameParts = user.name.trim().split(" ");
+  const transformed = users.map((user) => transformUser(user, user.id));
 
-    const firstName = nameParts[0];
+  const mockUsers = [];
 
-    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(" ") : "";
+  let nextId = transformed.length + 1;
 
-    return {
-      id: user.id,
-      firstName,
-      lastName,
-      email: user.email,
-      phone: user.phone,
+  while (mockUsers.length < 100) {
+    const baseUser = transformed[mockUsers.length % transformed.length];
+
+    mockUsers.push({
+      ...baseUser,
+      id: nextId++,
+      firstName: `${baseUser.firstName}${mockUsers.length + 1}`,
+      email: `user${nextId}@example.com`,
       department: getRandomDepartment(),
-    };
-  });
+    });
+  }
+
+  return [...transformed, ...mockUsers];
 }

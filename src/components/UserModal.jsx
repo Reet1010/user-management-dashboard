@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { DEPARTMENTS } from "../utils/constants";
+import { useRef } from "react";
+
 
 export default function UserModal({
     user,
@@ -15,6 +17,8 @@ export default function UserModal({
     });
 
     const [errors, setErrors] = useState({});
+    const inputRefs = useRef({});
+
 
     useEffect(() => {
         if (user) {
@@ -25,31 +29,13 @@ export default function UserModal({
     function validate() {
         const validationErrors = {};
 
-        if (!formData.firstName.trim()) {
-            validationErrors.firstName =
-                "First name is required";
-        }
+        Object.keys(inputRefs.current).forEach((key) => {
+            const input = inputRefs.current[key];
 
-        if (!formData.lastName.trim()) {
-            validationErrors.lastName =
-                "Last name is required";
-        }
-
-        if (!formData.email.trim()) {
-            validationErrors.email =
-                "Email is required";
-        }
-
-        const emailRegex =
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (
-            formData.email &&
-            !emailRegex.test(formData.email)
-        ) {
-            validationErrors.email =
-                "Enter a valid email";
-        }
+            if (!input.checkValidity()) {
+                validationErrors[key] = input.validationMessage;
+            }
+        });
 
         setErrors(validationErrors);
 
@@ -102,6 +88,7 @@ export default function UserModal({
                                         ? "email"
                                         : "text"
                                 }
+                                ref={(element) => (inputRefs.current[field] = element)}
                                 name={field}
                                 value={formData[field]}
                                 onChange={handleChange}
