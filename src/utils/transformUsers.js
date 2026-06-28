@@ -19,8 +19,6 @@ export function transformUsers(users) {
       lastName,
       email: user.email,
       phone: user.phone,
-      website: user.website,
-      company: user.company?.name || "",
       department: getRandomDepartment(),
     };
   });
